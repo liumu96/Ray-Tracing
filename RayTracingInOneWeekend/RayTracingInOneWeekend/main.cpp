@@ -5,6 +5,9 @@
 //  Created by liuxing on 2023/6/22.
 //
 
+#include "color.h"
+#include "vec3.h"
+
 #include <iostream>
 
 int main() {
@@ -25,11 +28,9 @@ int main() {
             auto g = double(j) / (image_height - 1);
             auto b = 0.25;
             
-            int ir = static_cast<int>(255.999 * r);
-            int ig = static_cast<int>(255.999 * g);
-            int ib = static_cast<int>(255.999 * b);
+            color pixel_color(r, g, b);
             
-            std::cout << ir << ' ' << ig << ' ' << ib << '\n';
+            write_color(std::cout, pixel_color);
         }
     }
     
