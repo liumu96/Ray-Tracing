@@ -16,6 +16,16 @@
 
 #include <iostream>
 
+
+hittable_list earth() {
+    auto earth_texture = make_shared<image_texture>("earthmap.jpg");
+    auto earth_surface = make_shared<lambertian>(earth_texture);
+    auto globe = make_shared<sphere>(point3(0,0,0), 2, earth_surface);
+
+    return hittable_list(globe);
+}
+
+
 hittable_list two_perlin_spheres() {
     hittable_list objects;
     
@@ -108,22 +118,22 @@ color ray_color(const ray& r, const hittable& world, int depth) {
 }
 
 int main() {
-    
+
     // Image
     const auto aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
 //    const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
     const int max_depth = 50;
-    
+
     // World
     hittable_list world;
-    
+
     point3 lookfrom;
     point3 lookat;
     auto vfov = 40.0;
     auto aperture = 0.0;
-    
+
     switch (0) {
         case 1:
             world = random_scene();
@@ -132,35 +142,41 @@ int main() {
             vfov = 20.0;
             aperture = 0.1;
             break;
-            
-        
+
+
         case 2:
             world = two_spheres();
             lookfrom = point3(13, 2, 3);
             lookat = point3(0, 0, 0);
             vfov = 20.0;
             break;
-        default:
         case 3:
             world = two_perlin_spheres();
             lookfrom = point3(13, 2, 3);
             lookat = point3(0, 0, 0);
             vfov = 20.0;
             break;
-            
+        default:
+        case 4:
+            world = earth();
+            lookfrom = point3(13, 2, 3);
+            lookat = point3(0, 0, 0);
+            vfov = 20.0;
+            break;;
+
     }
-    
+
     // Camera
     vec3 vup(0, 1, 0);
     auto dist_to_focus = 10.0;
     int image_height = static_cast<int>(image_width / aspect_ratio);
-    
+
     camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
-    
+
     // Render
-    
+
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-    
+
     for (int j = image_height - 1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining:" << j << ' ' << std::flush;
         for (int i = 0; i < image_width; ++i) {
@@ -174,7 +190,7 @@ int main() {
             write_color(std::cout, pixel_color, samples_per_pixel);
         }
     }
-    
+
     std::cerr << "\nDone.\n";
 }
 
