@@ -71,6 +71,7 @@ vec3 refract(const vec3 &I, const vec3 &N, const float eta_t, const float eta_i 
     return k < 0 ? vec3{1, 0, 0} : I * eta + N * (eta * cosi - std::sqrt(k)); // k < 0 = total reflection, no ray to refract. I refract it anyways, this has no physical meaning
 }
 
+// Here uses the geometric solution, not algebraic solution.
 std::tuple<bool, float> ray_sphere_intersect(const vec3 &orig, const vec3 &dir, const Sphere &s) { // ret value is a pair [intersection found, distance]
     vec3 L = s.center - orig;
     float tca = L * dir;
